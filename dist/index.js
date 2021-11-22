@@ -3851,7 +3851,19 @@ async function run() {
               .filter(s => s !== "");
         const rmGoSum = core.getInput('remove_gosum').toLowerCase();
         let dirs = await utils.findDirectories(filePatterns);
-        await gomodTidy(dirs, rmGoSum, directives);
+
+        if (rmGoSum) {
+            await removeGoSum(dirs)
+        }
+
+        if (directives && directives.length > 0) {
+            for (const directive of directives) {
+                await gomodTidy(dirs, directive)
+            }
+        } else {
+            await gomodTidy(dirs, false);
+        }
+
         let diffs = await gitDiffFiles();
 
         core.startGroup('Diff Files');
@@ -3875,18 +3887,21 @@ async function run() {
 
 run();
 
-async function gomodTidy(dirs, rmGoSum, directives) {
+async function removeGoSum(dirs) {
     let p = [];
     for (const d of dirs) {
-        if (rmGoSum) {
-            core.debug(`${d}: rm go.sum`);
-            p.push(exec.exec('rm', ['go.sum'], { cwd: d, silent: false }));    
-        }
-        if (directives.length > 0) {
-            for (const directive of directives) {
-                core.debug(`${d}: go mod tidy -go=${directive}`);
-                p.push(exec.exec('go', ['mod', 'tidy', '-go='+directive], { cwd: d, silent: false }));
-            }
+        core.debug(`${d}: rm go.sum`);
+        p.push(exec.exec('rm', ['go.sum'], { cwd: d, silent: false }));
+    }
+    return await Promise.all(p);
+}
+
+async function gomodTidy(dirs, directive) {
+    let p = [];
+    for (const d of dirs) {
+        if (directive !== false) {
+            core.debug(`${d}: go mod tidy -go=${directive}`);
+            p.push(exec.exec('go', ['mod', 'tidy', '-go='+directive], { cwd: d, silent: false }));
         } else {
             core.debug(`${d}: go mod tidy`);
             p.push(exec.exec('go', ['mod', 'tidy'], { cwd: d, silent: false }));
