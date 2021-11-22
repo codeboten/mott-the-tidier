@@ -3858,10 +3858,10 @@ async function run() {
 
         if (directives && directives.length > 0) {
             for (const directive of directives) {
-                await gomodTidy(dirs, directive)
+                gomodTidy(dirs, directive)
             }
         } else {
-            await gomodTidy(dirs, false);
+            gomodTidy(dirs, false);
         }
 
         let diffs = await gitDiffFiles();
@@ -3896,18 +3896,16 @@ async function removeGoSum(dirs) {
     return await Promise.all(p);
 }
 
-async function gomodTidy(dirs, directive) {
-    let p = [];
+function gomodTidy(dirs, directive) {
     for (const d of dirs) {
         if (directive !== false) {
             core.debug(`${d}: go mod tidy -go=${directive}`);
-            p.push(exec.exec('go', ['mod', 'tidy', '-go='+directive], { cwd: d, silent: false }));
+            exec.exec('go', ['mod', 'tidy', '-go='+directive], { cwd: d, silent: false });
         } else {
             core.debug(`${d}: go mod tidy`);
-            p.push(exec.exec('go', ['mod', 'tidy'], { cwd: d, silent: false }));
+            exec.exec('go', ['mod', 'tidy'], { cwd: d, silent: false });
         }
     }
-    return await Promise.all(p);
 }
 
 // Run git status in each directory - to see what files have changed
