@@ -3880,16 +3880,16 @@ async function gomodTidy(dirs, rmGoSum, directives) {
     for (const d of dirs) {
         if (rmGoSum) {
             core.debug(`${d}: rm go.sum`);
-            p.push(exec.exec('rm', ['go.sum'], { cwd: d, silent: true }));    
+            p.push(exec.exec('rm', ['go.sum'], { cwd: d, silent: false }));    
         }
         if (directives.length > 0) {
             for (const directive of directives) {
                 core.debug(`${d}: go mod tidy -go=${directive}`);
-                p.push(exec.exec('go', ['mod', 'tidy', '-go='+directive], { cwd: d, silent: true }));
+                p.push(exec.exec('go', ['mod', 'tidy', '-go='+directive], { cwd: d, silent: false }));
             }
         } else {
             core.debug(`${d}: go mod tidy`);
-            p.push(exec.exec('go', ['mod', 'tidy'], { cwd: d, silent: true }));
+            p.push(exec.exec('go', ['mod', 'tidy'], { cwd: d, silent: false }));
         }
     }
     return await Promise.all(p);
