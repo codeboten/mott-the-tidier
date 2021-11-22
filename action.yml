@@ -16,6 +16,14 @@ inputs:
     description: 'fail if files other than go.{mod,sum} are modified during tidy'
     required: false
     default: false
+  remove_gosum:
+    description: 'remove go.sum file as a first step before running go mod tidy'
+    required: false
+    default: false
+  directives:
+    description: 'supports setting one or more go directive when calling go mod tidy'
+    required: false
+    default: ""
 
 outputs:
   changedfiles: # id of output

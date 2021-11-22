@@ -49,6 +49,16 @@ installed go on the Workflow runner.
     # defaults to false
 
     gosum_only: false
+
+    # supports setting one or more go directive when calling go mod tidy to allow users
+    # to support backwards compatibility
+
+    directives: ""
+
+    # allows users to remove go.sum file as a first step before running
+    # go mod tidy
+
+    remove_gosum: false
 ```
 
 ### Example

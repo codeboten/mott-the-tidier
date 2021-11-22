@@ -28,7 +28,6 @@ describe('test findDirectories', () => {
         const dirs = await utils.findDirectories(['go.mod', 'test/go.mod']);
         expect(dirs).toEqual(['/foo', '/foo/test']);
     });
-
 });
 
 describe('checkModifiedFiles', () => {
@@ -57,7 +56,6 @@ describe('checkModifiedFiles', () => {
         expect(() => utils.checkModifiedFiles(filesOnlyGosum, false, true)).not.toThrow();
         expect(() => utils.checkModifiedFiles(filesOnlyGosumGomod, false, true)).not.toThrow();
     });
-
 });
 
 // shows how the runner will run a javascript action with env / stdout protocol
