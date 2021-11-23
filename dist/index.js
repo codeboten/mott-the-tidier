@@ -3858,10 +3858,10 @@ async function run() {
 
         if (directives && directives.length > 0) {
             for (const directive of directives) {
-                gomodTidy(dirs, directive)
+                await gomodTidy(dirs, directive)
             }
         } else {
-            gomodTidy(dirs, false);
+            await gomodTidy(dirs, false);
         }
 
         let diffs = await gitDiffFiles();
@@ -3896,14 +3896,14 @@ async function removeGoSum(dirs) {
     return await Promise.all(p);
 }
 
-function gomodTidy(dirs, directive) {
+async function gomodTidy(dirs, directive) {
     for (const d of dirs) {
         if (directive !== false) {
             core.debug(`${d}: go mod tidy -go=${directive}`);
-            exec.exec('go', ['mod', 'tidy', '-go='+directive], { cwd: d, silent: false });
+            await exec.exec('go', ['mod', 'tidy', '-go='+directive], { cwd: d, silent: false });
         } else {
             core.debug(`${d}: go mod tidy`);
-            exec.exec('go', ['mod', 'tidy'], { cwd: d, silent: false });
+            await exec.exec('go', ['mod', 'tidy'], { cwd: d, silent: false });
         }
     }
 }
